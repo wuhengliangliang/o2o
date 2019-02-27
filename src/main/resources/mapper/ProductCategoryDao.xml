@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.o2o.dao.ProductCategoryDao">
+<!-- 目的：为了dao接口方法提供sql语句配置  -->
+<!-- 查询 -->
+	<select id="queryProductCategoryList" resultType="com.imooc.o2o.entity.ProductCategory"
+		parameterType="Long">
+		<!-- 具体的sql -->
+		select
+		product_category_id,
+		product_category_name,
+		priority,
+		create_time,
+		shop_id
+		from
+		tb_product_category
+		where
+		shop_id = #{shopId}
+		order by priority desc
+	</select>
+	
+	<!-- 实现dao层中的 batchInsertProductCategory sql语句的插入 -->
+	<!-- 添加 -->
+	<insert id="batchInsertProductCategory" parameterType="java.util.List">
+		insert into 
+		tb_product_category(product_category_name,priority,create_time,shop_id)
+		values
+		<!-- 遍历元素，集合方式，一productCategory 的变量来变量  逗号分割符-->
+		<foreach collection="list" item="productCategory" index="index" separator=",">	
+			(
+			#{productCategory.productCategoryName},
+			#{productCategory.priority},
+			#{productCategory.createTime},
+			#{productCategory.shopId}
+			)		
+	
+	</foreach>
+		
+	</insert>
+	
+	<!-- 删除指定商品类别  id对应的是 dao中删除的接口-->
+	<delete id="deleteProductCategory">
+	delete from 
+	tb_product_category
+	where
+	product_category_id = #{productCategoryId}
+	and shop_id = #{shopId}		
+	
+	</delete>
+
+</mapper>
